@@ -1,0 +1,24 @@
+{
+  "name": "congo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "congoCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrabanda/congo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrabanda/congo/issues"
+  },
+  "homepage": "https://github.com/mrabanda/congo#readme",
+  "dependencies": {
+    "mysql": "^2.13.0",
+    "prompt": "^1.0.0"
+  }
+}

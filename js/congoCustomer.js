@@ -32,11 +32,14 @@ var schema = {
   }
 };
 
+//mysql query for products table
 connection.query('SELECT * FROM products', function (err,products) {
   if (err) throw (err);
-  var itemIds = [];
+  var itemIds = [];   //empty array to store id's of products//
+
   console.log(products);
 
+  //loop through products table and push id's of products to itemIds array
   products.forEach(function (item) {
     itemIds.push(item.item_id)
   });
@@ -47,26 +50,35 @@ connection.query('SELECT * FROM products', function (err,products) {
 //gets input from user using schema object  
   prompt.get(schema, function (err, user) {
 
-    var purchaseId = parseInt(user.purchaseId);
+    //user input stored in these variables
+    var purchaseId = parseInt(user.purchaseId);   
     var purchaseQuantity = parseInt(user.purchaseQuantity);
 
-    console.log(user.purchaseId);
-    console.log(typeof(purchaseQuantity));
-
+    //check if id entered by user exists in products table using itemIds array
     if (itemIds.indexOf(purchaseId) === -1) {
       console.log("This item does not exist")
-    } else {
+    } else { //loop through products table
       products.forEach(function (item) {
         var itemId = item.item_id;
         var itemPrice = item.price;
         var itemQuantity = item.stock_quantity;
 
+        //finds item in product table matching itemId entered by user
         if (itemId === purchaseId) {
+          //if item quntity is less than user entered purchase quantity transaction is declined
           if (itemQuantity < purchaseQuantity) {
             console.log("Please select fewer itmes")
-          } else {
-            var purchaseTotal = itemPrice * purchaseQuantity;
+          } else { //complete transaction when item quantity is more than purchase quantity
+
+            var purchaseTotal = itemPrice * purchaseQuantity;   //variable for transaction price
+            var updatedQuantity = itemQuantity - purchaseQuantity;    //variable for updated stock_quantity in products table
+
             console.log(`Your total is: $${purchaseTotal}`);
+            
+          //updates item in products table with updatedQuantity
+            connection.query(`UPDATE products SET ? WHERE ?`, [{stock_quantity: updatedQuantity}, {item_id: itemId}], function (err,res) {
+              if (err) throw (err);
+            });
           };
         };
       });
